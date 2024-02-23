@@ -12,22 +12,24 @@ class AuthController extends Controller
     //////////////////////////////register//////////////////////////////
     public function register(Request $request)
     {
+        // Validate the form data
         $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
+        // Create a new user from user model
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'password' => bcrypt($validatedData['password']),
         ]);
 
-        // Authenticate the user
-        auth()->login($user);
+        // You may optionally log in the user here
 
-        return redirect('/dashboard')->with('success', 'Account created successfully!');
+        // Redirect or return a response
+        return redirect('/')->with('success', 'User registered successfully!');
     }
 
     //////////////////////////////login//////////////////////////////
