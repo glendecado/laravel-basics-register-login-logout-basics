@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 ///views only
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
 Route::get('/user/login', function () {
     return view('login');
 });
@@ -29,7 +29,15 @@ Route::get('/dashboard', function () {
 });
 
 
-//for logics
+//for
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//if you are auth
+Route::middleware('auth')->group(function () {
+    Route::get('/auth', function () {
+        return view('auth');
+    });
+});
+Route::redirect('/', '/user/login');
